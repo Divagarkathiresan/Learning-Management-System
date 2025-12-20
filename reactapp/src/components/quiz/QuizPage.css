@@ -1,0 +1,113 @@
+
+.quiz-card {
+	max-width: 480px;
+	margin: 50px auto 0 auto;
+	padding: 2.2rem 2rem 1.5rem 2rem;
+	background: linear-gradient(135deg, #f8fafc 0%, #e0e7ff 100%);
+	border-radius: 1.5rem;
+	box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.13);
+	font-family: 'Segoe UI', 'Roboto', Arial, sans-serif;
+	color: #23235b;
+
+	/* Quiz Card Container */
+	.quiz-card {
+		max-width: 500px;
+		margin: 48px auto 0 auto;
+		padding: 2.5rem 2rem 2rem 2rem;
+		background: #fff;
+		border-radius: 1.2rem;
+		box-shadow: 0 6px 32px 0 rgba(44, 51, 81, 0.13);
+		font-family: 'Segoe UI', 'Roboto', Arial, sans-serif;
+		color: #23235b;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+	}
+
+	/* Quiz Header */
+	.quiz-header {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		margin-bottom: 1.3rem;
+	}
+	.quiz-icon {
+		font-size: 2.2rem;
+		color: #6366f1;
+		margin-bottom: 0.2rem;
+		animation: popin 0.7s cubic-bezier(.68,-0.55,.27,1.55);
+	}
+	@keyframes popin {
+		0% { transform: scale(0.5); opacity: 0; }
+		80% { transform: scale(1.15); opacity: 1; }
+		100% { transform: scale(1); }
+	}
+	.quiz-header h2 {
+		font-size: 1.6rem;
+		font-weight: 700;
+		color: #3730a3;
+		margin: 0.2rem 0 0.2rem 0;
+		letter-spacing: 0.5px;
+	}
+
+	/* Questions List */
+	.quiz-questions {
+		width: 100%;
+		display: flex;
+		flex-direction: column;
+		gap: 1.1rem;
+	}
+	.quiz-question {
+		background: #f8fafc;
+		border-radius: 0.9rem;
+		box-shadow: 0 1px 6px 0 rgba(99, 102, 241, 0.07);
+		padding: 1rem 1.2rem;
+		display: flex;
+		align-items: flex-start;
+		gap: 0.7rem;
+		font-size: 1.08rem;
+		color: #23235b;
+		font-weight: 500;
+		border-left: 4px solid #6366f1;
+		transition: box-shadow 0.18s, border-color 0.18s;
+	}
+	.quiz-question:hover {
+		box-shadow: 0 4px 16px 0 rgba(99, 102, 241, 0.13);
+		border-left: 4px solid #3730a3;
+	}
+	.quiz-qnum {
+		color: #6366f1;
+		font-weight: 700;
+		font-size: 1.1rem;
+		margin-right: 0.5rem;
+	}
+	.quiz-qtext {
+		flex: 1;
+	}
+
+	/* Empty State */
+	.quiz-empty {
+		color: #6366f1;
+		background: #e0e7ff;
+		border-radius: 0.9rem;
+		padding: 1rem 1.2rem;
+		text-align: center;
+		font-weight: 500;
+		font-size: 1.08rem;
+		width: 100%;
+	}
+
+	@media (max-width: 600px) {
+		.quiz-card {
+			max-width: 98vw;
+			padding: 1.2rem 0.5rem 1.5rem 0.5rem;
+		}
+		.quiz-header h2 {
+			font-size: 1.1rem;
+		}
+		.quiz-question, .quiz-empty {
+			font-size: 0.97rem;
+			padding: 0.7rem 0.7rem;
+		}
+	}
+}

@@ -1,0 +1,108 @@
+.enroll-card {
+  max-width: 500px;
+  margin: 50px auto 0 auto;
+  padding: 2.2rem 2rem 1.5rem 2rem;
+  background: linear-gradient(135deg, #f8fafc 0%, #e0e7ff 100%);
+  border-radius: 1.5rem;
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.13);
+  font-family: 'Segoe UI', 'Roboto', Arial, sans-serif;
+  color: #23235b;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.enroll-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 1.2rem;
+}
+
+.enroll-icon {
+  font-size: 2.5rem;
+  color: #6366f1;
+  margin-bottom: 0.3rem;
+  animation: popin 0.7s cubic-bezier(.68,-0.55,.27,1.55);
+}
+
+@keyframes popin {
+  0% { transform: scale(0.5); opacity: 0; }
+  80% { transform: scale(1.15); opacity: 1; }
+  100% { transform: scale(1); }
+}
+
+.enroll-header h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #3730a3;
+  margin: 0.2rem 0 0.2rem 0;
+}
+
+.enroll-title {
+  font-size: 1.08rem;
+  color: #6366f1;
+  margin-bottom: 0.2rem;
+}
+.enroll-title span {
+  font-weight: 600;
+  color: #23235b;
+}
+
+.enrolled-names {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  background: #f1f5f9;
+  max-width: 430px;
+  border-radius: 1rem;
+  box-shadow: 0 2px 8px 0 rgba(99, 102, 241, 0.08);
+  padding: 1rem 1rem 0.5rem 1rem;
+  min-height: 60px;
+  margin: 0 auto;
+  margin-bottom: 0.5rem;
+}
+
+.enrolled-names li {
+  margin: 0.2rem 0.7rem 0.2rem 0;
+  padding: 0.4rem 1.1rem;
+  background: #6366f1;
+  color: #fff;
+  border-radius: 1.2rem;
+  font-size: 1rem;
+  font-weight: 500;
+  border: none;
+  box-shadow: 0 1px 4px 0 rgba(99, 102, 241, 0.08);
+  transition: background 0.2s;
+  list-style: none;
+  display: inline-block;
+}
+
+.enrolled-names li:hover {
+  background: #4f46e5;
+}
+
+.no-students {
+  background: #e0e7ff;
+  color: #6366f1;
+  font-weight: 500;
+  border-radius: 1.2rem;
+  padding: 0.4rem 1.1rem;
+  margin: 0.2rem 0.7rem 0.2rem 0;
+  font-size: 1rem;
+  box-shadow: 0 1px 4px 0 rgba(99, 102, 241, 0.08);
+}
+
+@media (max-width: 600px) {
+  .enroll-card {
+    max-width: 98vw;
+    padding: 1.2rem 0.5rem 1.5rem 0.5rem;
+  }
+  .enroll-header h2 {
+    font-size: 1.1rem;
+  }
+  .enrolled-names li, .no-students {
+    font-size: 0.95rem;
+    padding: 0.3rem 0.7rem;
+  }
+}

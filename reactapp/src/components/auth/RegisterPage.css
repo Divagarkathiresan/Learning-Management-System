@@ -1,0 +1,80 @@
+.login-form {
+  background: linear-gradient(135deg, #f8fafc 0%, #e0e7ff 100%);
+  max-width: 370px;
+  margin: 60px auto 0 auto;
+  padding: 2.5rem 2rem 2rem 2rem;
+  border-radius: 1.5rem;
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.18);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-family: 'Segoe UI', 'Roboto', Arial, sans-serif;
+}
+
+.login-form h2 {
+  margin-bottom: 1.5rem;
+  color: #3730a3;
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.login-form form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.login-form input[type="text"],
+.login-form input[type="email"],
+.login-form input[type="password"] {
+  width: 90%;
+  padding: 0.8rem 1rem;
+  margin: 0.5rem 0 1rem 0;
+  border: 1px solid #c7d2fe;
+  border-radius: 0.7rem;
+  background: #f1f5f9;
+  font-size: 1rem;
+  transition: border 0.2s, box-shadow 0.2s;
+  outline: none;
+}
+
+.login-form input:focus {
+  border: 1.5px solid #6366f1;
+  box-shadow: 0 0 0 2px #a5b4fc44;
+}
+
+.login-form button[type="submit"] {
+  width: 90%;
+  padding: 0.9rem 0;
+  background: linear-gradient(90deg, #6366f1 0%, #818cf8 100%);
+  color: #fff;
+  font-size: 1.1rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 0.7rem;
+  cursor: pointer;
+  margin-top: 0.5rem;
+  box-shadow: 0 2px 8px 0 rgba(99, 102, 241, 0.08);
+  transition: background 0.2s, transform 0.1s;
+}
+
+.login-form button[type="submit"]:hover {
+  background: linear-gradient(90deg, #4f46e5 0%, #6366f1 100%);
+  transform: translateY(-2px) scale(1.03);
+}
+
+@media (max-width: 500px) {
+  .login-form {
+    max-width: 95vw;
+    padding: 1.2rem 0.5rem 1.5rem 0.5rem;
+  }
+  .login-form h2 {
+    font-size: 1.3rem;
+  }
+  .login-form input,
+  .login-form button {
+    font-size: 0.95rem;
+  }
+}

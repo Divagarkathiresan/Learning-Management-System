@@ -1,0 +1,85 @@
+Add new record
+POST - http://localhost:8080/api/courses
+{
+  "title": "Java Basics",
+  "description": "Intro to Java",
+  "quizQuestions": [
+    "What is JVM?*Java Virtual Machine",
+    "What is OOP?*Object Oriented Programming"
+  ],
+  "enrolledStudents": ["Divagar", "Alex", "Dharoon"],
+  "progress": {
+    "Divagar": 20,
+    "Alex": 40,
+    "Dharoon": 10
+  },
+  "scores": {
+    "Divagar": 20,
+    "Alex": 40,
+    "Dharoon": 10
+  }
+}
+GET - http://localhost:8080/api/courses
+GET - http://localhost:8080/api/courses/{id}
+PUT - http://localhost:8080/api/courses/{id}
+DELETE - http://localhost:8080/api/courses/{id}
+DELETE - http://localhost:8080/api/courses
+
+
+Enroll
+PUT - http://localhost:8080/api/courses/79/enroll?student=Arjun
+GET - http://localhost:8080/api/courses/79/students
+DELETE - http://localhost:8080/api/courses/{id}/enroll/{stdname}
+
+Update the progress
+PUT - http://localhost:8080/api/courses/79/enroll?student=Arjun&progress=100
+Get quiz
+GET - http://localhost:8080/api/courses/82/quiz
+post Score data
+POST - http://localhost:8080/api/courses/81/quiz?student=Divagar&score=80
+
+
+Assessment
+POST - http://localhost:8080/api/assessments
+{
+  "title": "Updated Mid Term Exam",
+  "description": "Covers modules 1-4",
+  "grades": [
+    {
+      "studentName": "Divagar",
+      "score": 90
+    }
+  ],
+  "discussions": [
+    {
+      "author": "John Doe",
+      "discussion": "I revised my answer for question 3 after review."
+    }
+  ]
+}
+GET - http://localhost:8080/api/assessments
+GET - http://localhost:8080/api/assessments/1
+PUT - http://localhost:8080/api/assessments/1
+DELETE - http://localhost:8080/api/assessments/1
+
+grades
+POST - http://localhost:8080/api/assessments/2/grades
+{
+  "studentName": "Alice",
+  "score": 92
+}
+GET - http://localhost:8080/api/assessments/2/grades
+PUT - http://localhost:8080/api/assessments/2/grades/1
+DELETE - http://localhost:8080/api/assessments/2/grades/2
+
+discussion
+
+POST - http://localhost:8080/api/assessments/2/discussions
+{
+  "author": "John",
+  "discussion": "I found question 3 tricky. Can we discuss it?"
+}                           
+GET - http://localhost:8080/api/assessments/2/discussions
+PUT - http://localhost:8080/api/assessments/2/discussions/1
+DELETE - http://localhost:8080/api/assessments/2/discussions/2
+
