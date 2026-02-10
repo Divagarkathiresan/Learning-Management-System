@@ -1,10 +1,13 @@
-import React from "react";
 import { Navigate } from "react-router-dom";
 import { isTokenExpired } from "../../utils/auth";
 
 export default function ProtectedRoute({ children }) {
-  if (isTokenExpired()) {
-    return <Navigate to="/login" />;
+  const token = localStorage.getItem("token");
+
+  // If no token or token expired → redirect to login
+  if (!token || isTokenExpired()) {
+    return <Navigate to="/login" replace />;
   }
+
   return children;
 }

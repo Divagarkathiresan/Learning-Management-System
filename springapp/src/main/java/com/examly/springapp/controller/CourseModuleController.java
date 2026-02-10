@@ -17,6 +17,7 @@ import java.util.*;
 @CrossOrigin(
     origins = {
         "http://localhost:3000",
+        "http://localhost:8081",
         "https://learning-management-system-cn9j.onrender.com"
     }
 )

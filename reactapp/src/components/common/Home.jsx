@@ -1,33 +1,39 @@
-// src/components/Home.jsx
-
 import React, { useState, useEffect } from "react";
-import {Link} from "react-router-dom";
+import { Link } from "react-router-dom";
 import Loader from "./Loader";
 import "./Home.css";
 
 export default function Home() {
-  // Example stats (replace with real data as needed)
-  const [stats, setStats] = useState({
+  const [stats] = useState({
     learning: 950,
     passed: 800,
-    courses: 24
+    courses: 24,
   });
 
-  // Animate loader values (optional, for effect)
-  const [animated, setAnimated] = useState({ studying: 0, learning: 0, passed: 0, courses: 0 });
+  const [animated, setAnimated] = useState({
+    learning: 0,
+    passed: 0,
+    courses: 0,
+  });
+
   useEffect(() => {
     const keys = Object.keys(stats);
-    const intervals = keys.map(key => {
-      return setInterval(() => {
-        setAnimated(prev => {
-          const next = { ...prev };
-          if (next[key] < stats[key]) {
-            next[key] = Math.min(next[key] + Math.ceil(stats[key] / 40), stats[key]);
-          }
-          return next;
+
+    const intervals = keys.map((key) =>
+      setInterval(() => {
+        setAnimated((prev) => {
+          if (prev[key] >= stats[key]) return prev;
+          return {
+            ...prev,
+            [key]: Math.min(
+              prev[key] + Math.ceil(stats[key] / 40),
+              stats[key]
+            ),
+          };
         });
-      }, 30);
-    });
+      }, 30)
+    );
+
     return () => intervals.forEach(clearInterval);
   }, [stats]);
 
@@ -36,19 +42,47 @@ export default function Home() {
       <div className="home">
         <div className="home-content">
           <h1>LMS</h1>
-          <h2 className="home-sub">Learn Today, Be a Champion Tomorrow.</h2>
-          <p className="home-desc">Start your journey with our creative learning platform. Track your progress, enroll in courses, and become a champion of tomorrow.</p>
+          <h2 className="home-sub">
+            Learn Today, Be a Champion Tomorrow.
+          </h2>
+
+          <p className="home-desc">
+            Start your journey with our creative learning platform. Track your
+            progress, enroll in courses, and become a champion of tomorrow.
+          </p>
+
           <div className="home-loaders">
-            <Loader label="Learning" value={animated.learning} max={stats.learning} color="#f9c846" Value={0.6}/>
-            <Loader label="Passed Out" value={animated.passed} max={stats.passed} color="#22c55e" Value={0.8}/>
-            <Loader label="Courses" value={animated.courses} max={stats.courses} color="#23235b" Value={0.4}/>
+            <Loader
+              label="Learning"
+              value={animated.learning}
+              max={stats.learning}
+              color="#f9c846"
+              ratio={0.6}
+            />
+            <Loader
+              label="Passed Out"
+              value={animated.passed}
+              max={stats.passed}
+              color="#22c55e"
+              ratio={0.8}
+            />
+            <Loader
+              label="Courses"
+              value={animated.courses}
+              max={stats.courses}
+              color="#23235b"
+              ratio={0.4}
+            />
           </div>
-          <ul>
-          <button className="cta-btn"><li><Link to="/courses">Get Started</Link></li></button>
-          </ul>
+
+          <div className="cta-wrapper">
+            <Link to="/courses" className="cta-btn">
+              Get Started
+            </Link>
+          </div>
         </div>
-        <div className="home-illustration">
-        </div>
+
+        <div className="home-illustration" />
       </div>
     </div>
   );

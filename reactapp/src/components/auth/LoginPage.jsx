@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { loginUser} from "../../api"
+import { useNavigate, Link } from "react-router-dom";
+import { loginUser } from "../../api";
 
 export default function LoginPage() {
   const [username, setUsername] = useState("");
@@ -17,7 +17,11 @@ export default function LoginPage() {
 
     try {
       const token = await loginUser({ username, password });
-      localStorage.setItem("token", token); // Save JWT
+
+      // Save JWT token
+      localStorage.setItem("token", token);
+
+      // Redirect after successful login
       navigate("/home");
     } catch (error) {
       alert(error.message || "Invalid username or password");
@@ -28,6 +32,7 @@ export default function LoginPage() {
   return (
     <div className="login-form">
       <h2>Login</h2>
+
       <form onSubmit={handleSubmit}>
         <input
           type="text"
@@ -37,6 +42,7 @@ export default function LoginPage() {
           required
         />
         <br />
+
         <input
           type="password"
           placeholder="Password"
@@ -45,8 +51,13 @@ export default function LoginPage() {
           required
         />
         <br />
+
         <button type="submit">Login</button>
-        <p>Don't have an account? <a href="/register">Register</a></p>
+
+        <p>
+          Don&apos;t have an account?{" "}
+          <Link to="/register">Register</Link>
+        </p>
       </form>
     </div>
   );

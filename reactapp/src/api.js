@@ -1,6 +1,9 @@
+
+import { API_BASE } from "./api/config";
+
 export const fetchCourses = async () => {
   try{
-    const response = await fetch("http://localhost:8080/api/courses");
+    const response = await fetch(`${API_BASE}/api/courses`);
     if(!response.ok){
       throw new Error("Error in getting the courses");
     }
@@ -16,7 +19,7 @@ export const fetchCourses = async () => {
 export const addCourse = async (courseData) => {
   try {
     const token = localStorage.getItem("token");
-    const response = await fetch("http://localhost:8080/api/courses", {
+    const response = await fetch(`${API_BASE}/api/courses`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -39,7 +42,7 @@ export const addCourse = async (courseData) => {
 
 export const enrollInCourse = async (id,name) => {
   try{
-    const response = await fetch(`http://localhost:8080/api/courses/${id}/enroll?student=${name}`,{
+    const response = await fetch(`${API_BASE}/api/courses/${id}/enroll?student=${name}`,{
       method:"PUT"
     })
 
@@ -58,7 +61,7 @@ export const enrollInCourse = async (id,name) => {
 
 export const getEnrolledStudents = async (id) => {
   try {
-    const response = await fetch(`http://localhost:8080/api/courses/${id}/students`);
+    const response = await fetch(`${API_BASE}/api/courses/${id}/students`);
     if (!response.ok) {
       throw new Error("Failed to fetch enrolled students");
     }
@@ -73,7 +76,7 @@ export const getEnrolledStudents = async (id) => {
 export const updateProgress = async (id, progress) => {
   try {
     const token = localStorage.getItem('token');
-    const response = await fetch(`http://localhost:8080/api/courses/${id}/progress`, {
+    const response = await fetch(`${API_BASE}/api/courses/${id}/progress`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -95,7 +98,7 @@ export const updateProgress = async (id, progress) => {
 
 export const fetchCourseContent = async (id) => {
   try {
-    const response = await fetch(`http://localhost:8080/api/courses/${id}/content`);
+    const response = await fetch(`${API_BASE}/api/courses/${id}/content`);
     if (!response.ok) {
       throw new Error("Error fetching course content");
     }
@@ -108,7 +111,7 @@ export const fetchCourseContent = async (id) => {
 
 export const getQuiz = async (id) => {
   try{
-    const response=await fetch(`http://localhost:8080/api/courses/${id}/quiz`);
+    const response=await fetch(`${API_BASE}/api/courses/${id}/quiz`);
     if(!(response.ok)){
       throw new Error("Error in getting the quiz questions");
     }
@@ -123,7 +126,7 @@ export const getQuiz = async (id) => {
 
 export const submitQuizScore = async (courseId, username, score) => {
   try {
-    const response = await fetch(`http://localhost:8080/api/courses/${courseId}/quiz?student=${username}&score=${score}`, {
+    const response = await fetch(`${API_BASE}/api/courses/${courseId}/quiz?student=${username}&score=${score}`, {
       method: 'POST'
     });
     if (!response.ok) {
@@ -143,7 +146,7 @@ export const submitQuiz = async (id, answers) => {
 
 export const registerUser = async(UserDetails)=>{
   try{
-    const response = await fetch("http://localhost:8080/api/auth/register",{
+    const response = await fetch(`${API_BASE}/api/auth/register`,{
       method:"POST",
       headers: { "Content-Type": "application/json" },
       body:JSON.stringify(UserDetails),
@@ -164,18 +167,26 @@ export const registerUser = async(UserDetails)=>{
 
 export const loginUser = async (credentials) => {
   try {
-    const response = await fetch("http://localhost:8080/api/auth/login", {
+    const response = await fetch(`${API_BASE}/api/auth/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(credentials),
     });
 
-    const data = await response.json();
-
     if (!response.ok) {
-      throw new Error(data.error || "Login failed");
+      let errorMessage = "Login failed";
+      try {
+        const data = await response.json();
+        errorMessage = data.error || errorMessage;
+      } catch (e) {
+        if (response.status === 500) {
+          errorMessage = "Server error. Please check if the backend is running and database is connected.";
+        }
+      }
+      throw new Error(errorMessage);
     }
 
+    const data = await response.json();
     return data.token;
   } catch (error) {
     console.error("Login error:", error);

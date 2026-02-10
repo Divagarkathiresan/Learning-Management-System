@@ -27,8 +27,12 @@ public class AssessmentService {
 
     public Assessment update(Long id, Assessment updated) {
         Assessment existing = getById(id);
-        existing.setTitle(updated.getTitle());
-        existing.setDescription(updated.getDescription());
+        if (updated.getTitle() != null) {
+            existing.setTitle(updated.getTitle());
+        }
+        if (updated.getDescription() != null) {
+            existing.setDescription(updated.getDescription());
+        }
         return repo.save(existing);
     }
 

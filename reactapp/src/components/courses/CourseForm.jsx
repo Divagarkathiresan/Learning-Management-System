@@ -7,25 +7,45 @@ export default function CourseForm() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [content, setContent] = useState("");
-  const [quizQuestions, setQuiz] = useState([""]);
-  const navigate=useNavigate();
-
-  const token = localStorage.getItem("token");
+  const [quizQuestions, setQuizQuestions] = useState([""]);
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const quizArray = quizQuestions.map(q => q.trim()).filter(q => q);
+    // Clean and validate quiz questions
+    const quizArray = quizQuestions
+      .map((q) => q.trim())
+      .filter(Boolean);
+
+    if (!title || !description || !content) {
+      alert("Please fill all course fields");
+      return;
+    }
+
+    if (quizArray.length === 0) {
+      alert("Please add at least one quiz question");
+      return;
+    }
 
     try {
-      const courseData = { title, description, content, quizQuestions: quizArray };
+      const courseData = {
+        title: title.trim(),
+        description: description.trim(),
+        content: content.trim(),
+        quizQuestions: quizArray,
+      };
+
       await addCourse(courseData);
-      console.log("Course added successfully:", courseData);
+
       alert("Course added successfully!");
+
+      // Reset form
       setTitle("");
       setDescription("");
       setContent("");
-      setQuiz([""]);
+      setQuizQuestions([""]);
+
       navigate("/courses");
     } catch (err) {
       console.error("Error adding course:", err);
@@ -34,18 +54,21 @@ export default function CourseForm() {
   };
 
   const handleQuizChange = (index, value) => {
-    const copy = [...quizQuestions];
-    copy[index] = value;
-    setQuiz(copy);
+    setQuizQuestions((prev) => {
+      const copy = [...prev];
+      copy[index] = value;
+      return copy;
+    });
   };
 
   const addQuestion = () => {
-    setQuiz([...quizQuestions, ""]);
+    setQuizQuestions((prev) => [...prev, ""]);
   };
 
   return (
     <div className="forms">
       <h3>Add Course</h3>
+
       <form onSubmit={handleSubmit}>
         <input
           placeholder="Title"
@@ -54,6 +77,7 @@ export default function CourseForm() {
           required
         />
         <br />
+
         <textarea
           placeholder="Description"
           value={description}
@@ -61,16 +85,18 @@ export default function CourseForm() {
           required
         />
         <br />
+
         <textarea
           placeholder="Course Content"
           value={content}
           onChange={(e) => setContent(e.target.value)}
-          required
           rows="6"
+          required
         />
         <br />
 
         <h4>Quiz Questions</h4>
+
         {quizQuestions.map((q, i) => (
           <div key={i}>
             <input
@@ -78,10 +104,10 @@ export default function CourseForm() {
               placeholder={`Question ${i + 1} (format: Question*Answer)`}
               value={q}
               onChange={(e) => handleQuizChange(i, e.target.value)}
-              required
             />
           </div>
         ))}
+
         <button type="button" onClick={addQuestion}>
           + Add Question
         </button>

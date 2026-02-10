@@ -1,10 +1,14 @@
-import React, { useState, useEffect } from 'react';
-import './Profile.css';
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { API_BASE } from "../../api/config";
+import "./Profile.css";
 
 export default function Profile() {
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchProfile();
@@ -12,23 +16,35 @@ export default function Profile() {
 
   const fetchProfile = async () => {
     try {
-      const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:8080/api/auth/profile', {
+      const token = localStorage.getItem("token");
+
+      // 🔒 No token → redirect
+      if (!token) {
+        navigate("/login");
+        return;
+      }
+
+      const response = await fetch(`${API_BASE}/api/auth/profile`, {
         headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json"
         }
       });
 
-      if (response.ok) {
-        const data = await response.json();
-        data.isAdmin = data.email?.endsWith('@lms.ac.in') || false;
-        setProfile(data);
-      } else {
-        setError('Failed to load profile');
+      // 🔒 Invalid token → force logout
+      if (!response.ok) {
+        localStorage.removeItem("token");
+        navigate("/login");
+        return;
       }
+
+      const data = await response.json();
+      data.isAdmin = data.email?.endsWith("@lms.ac.in") || false;
+
+      setProfile(data);
     } catch (err) {
-      setError('Error loading profile');
+      console.error("Error loading profile:", err);
+      setError("Error loading profile");
     } finally {
       setLoading(false);
     }
@@ -42,7 +58,7 @@ export default function Profile() {
       <div className="profile-header">
         <h1>My Profile</h1>
       </div>
-      
+
       <div className="profile-info">
         <div className="info-card">
           <h2>Personal Information</h2>
@@ -52,7 +68,7 @@ export default function Profile() {
           </div>
           <div className="info-item">
             <label>Email:</label>
-            <span>{profile?.email || 'Not provided'}</span>
+            <span>{profile?.email || "Not provided"}</span>
           </div>
         </div>
 
@@ -73,7 +89,10 @@ export default function Profile() {
             </>
           ) : (
             <>
-              <h2>Enrolled Courses ({profile?.enrolledCourses?.length || 0})</h2>
+              <h2>
+                Enrolled Courses ({profile?.enrolledCourses?.length || 0})
+              </h2>
+
               {profile?.enrolledCourses?.length > 0 ? (
                 <div className="courses-list">
                   {profile.enrolledCourses.map(course => (
@@ -81,15 +100,27 @@ export default function Profile() {
                       <h3>{course.title}</h3>
                       <p>{course.description}</p>
                       <div className="course-stats">
-                        <h4>Progress: {course.progress?.[profile.username] || 0}%</h4>
-                        <h4>Questions: {course.quizQuestions?.length || 0}</h4>
-                        <h4>Score: {course.scores?.[profile.username] !== undefined ? `${course.scores[profile.username]}/${course.quizQuestions?.length || 0}` : 'Not attempted'}</h4>
+                        <h4>
+                          Progress:{" "}
+                          {course.progress?.[profile.username] || 0}%
+                        </h4>
+                        <h4>
+                          Questions: {course.quizQuestions?.length || 0}
+                        </h4>
+                        <h4>
+                          Score:{" "}
+                          {course.scores?.[profile.username] !== undefined
+                            ? `${course.scores[profile.username]}/${course.quizQuestions?.length || 0}`
+                            : "Not attempted"}
+                        </h4>
                       </div>
                     </div>
                   ))}
                 </div>
               ) : (
-                <p className="no-courses">You haven't enrolled in any courses yet.</p>
+                <p className="no-courses">
+                  You haven't enrolled in any courses yet.
+                </p>
               )}
             </>
           )}

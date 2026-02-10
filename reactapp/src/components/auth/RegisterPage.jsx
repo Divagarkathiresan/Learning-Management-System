@@ -1,33 +1,43 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-
+import { useNavigate, Link } from "react-router-dom";
 import { registerUser } from "../../api";
 import "./RegisterPage.css";
 
 export default function RegisterPage() {
   const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");       // Added email state
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
-    e.preventDefault(); // prevent page reload
+    e.preventDefault();
+
+    if (!username || !email || !password) {
+      alert("Please fill all fields");
+      return;
+    }
+
     try {
       await registerUser({ username, email, password });
       alert("Registration successful! Please login.");
+
+      // Clear form
       setUsername("");
-      setEmail("");      // reset email
+      setEmail("");
       setPassword("");
-      navigate("/login"); // Redirect to login after registration
+
+      // Redirect to login
+      navigate("/login");
     } catch (error) {
       alert(error.message || "Error in registration");
-      console.error("Error in registering:", error);
+      console.error("Registration error:", error);
     }
   };
 
   return (
     <div className="login-form">
       <h2>Register</h2>
+
       <form onSubmit={handleSubmit}>
         <input
           type="text"
@@ -37,14 +47,16 @@ export default function RegisterPage() {
           required
         />
         <br />
+
         <input
           type="email"
-          placeholder="Email"             
+          placeholder="Email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
         />
         <br />
+
         <input
           type="password"
           placeholder="Password"
@@ -53,8 +65,13 @@ export default function RegisterPage() {
           required
         />
         <br />
-        <button type="submit" >Register</button>
-        <p>Already have an account? <a href="/login">Login</a></p>
+
+        <button type="submit">Register</button>
+
+        <p>
+          Already have an account?{" "}
+          <Link to="/login">Login</Link>
+        </p>
       </form>
     </div>
   );

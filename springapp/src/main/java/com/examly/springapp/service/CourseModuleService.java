@@ -70,7 +70,8 @@ public class CourseModuleService {
     }
 
     public CourseModule enrollStudent(Long id, String student) {
-        CourseModule course = repo.findById(id).orElseThrow();
+        CourseModule course = repo.findById(id)
+            .orElseThrow(() -> new RuntimeException("Course not found with id: " + id));
         if (!course.getEnrolledStudents().contains(student)) {
             course.getEnrolledStudents().add(student);
         }
@@ -93,19 +94,22 @@ public class CourseModuleService {
 
 
     public CourseModule updateProgress(Long id, String student, int progressValue) {
-        CourseModule course = repo.findById(id).orElseThrow();
+        CourseModule course = repo.findById(id)
+            .orElseThrow(() -> new RuntimeException("Course not found with id: " + id));
         course.getProgress().put(student, progressValue);
         return repo.save(course);
     }
 
     public List<String> getQuizQuestions(Long id) {
-        CourseModule course = repo.findById(id).orElseThrow();
+        CourseModule course = repo.findById(id)
+            .orElseThrow(() -> new RuntimeException("Course not found with id: " + id));
         return course.getQuizQuestions();
     }
 
     public String submitScore(Long id, String student, int score) {
-        CourseModule course = repo.findById(id).orElseThrow();
-        course.getScores().put(student, score); // overrides old score if exists
+        CourseModule course = repo.findById(id)
+            .orElseThrow(() -> new RuntimeException("Course not found with id: " + id));
+        course.getScores().put(student, score);
         repo.save(course);
         return "Score submitted!";
     }

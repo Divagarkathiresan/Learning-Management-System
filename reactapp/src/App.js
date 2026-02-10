@@ -1,4 +1,4 @@
-
+//app.js - Main application component with routing and layout
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from "react-router-dom";
 import Navbar from "./components/common/Navbar";
 import Home from "./components/common/Home";

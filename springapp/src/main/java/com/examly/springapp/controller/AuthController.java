@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
 @CrossOrigin(
     origins = {
         "http://localhost:3000",
+        "http://localhost:8081",
         "https://learning-management-system-cn9j.onrender.com"
     }
 )
@@ -60,19 +61,25 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody User user) {
-        if (user.getUsername() == null || user.getPassword() == null) {
-            return ResponseEntity.badRequest()
-                    .body(Map.of("error", "Username and password are required"));
-        }
+        try {
+            if (user.getUsername() == null || user.getPassword() == null) {
+                return ResponseEntity.badRequest()
+                        .body(Map.of("error", "Username and password are required"));
+            }
 
-        User dbUser = userRepo.findByUsername(user.getUsername());
-        if (dbUser == null || !dbUser.getPassword().equals(user.getPassword())) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(Map.of("error", "Invalid username or password"));
-        }
+            User dbUser = userRepo.findByUsername(user.getUsername());
+            if (dbUser == null || !dbUser.getPassword().equals(user.getPassword())) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                        .body(Map.of("error", "Invalid username or password"));
+            }
 
-        String token = jwtUtil.generateToken(dbUser.getUsername());
-        return ResponseEntity.ok(Map.of("token", token));
+            String token = jwtUtil.generateToken(dbUser.getUsername());
+            return ResponseEntity.ok(Map.of("token", token));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(Map.of("error", "Login failed: " + e.getMessage()));
+        }
     }
 
     @GetMapping("/profile")
