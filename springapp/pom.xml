@@ -46,11 +46,11 @@
         </dependency>
 
         <!-- MySQL Driver -->
-        <dependency>
+        <!-- <dependency>
             <groupId>com.mysql</groupId>
             <artifactId>mysql-connector-j</artifactId>
             <version>8.0.33</version>
-        </dependency>
+        </dependency> -->
 
         <!-- Lombok -->
         <dependency>
