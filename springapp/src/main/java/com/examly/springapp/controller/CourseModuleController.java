@@ -14,7 +14,13 @@ import org.springframework.web.bind.annotation.*;
 import java.util.*;
 
 
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(
+    origins = {
+        "http://localhost:3000",
+        "https://learning-management-system-cn9j.onrender.com"
+    }
+)
+
 @RestController
 @RequestMapping("/api/courses")
 public class CourseModuleController {

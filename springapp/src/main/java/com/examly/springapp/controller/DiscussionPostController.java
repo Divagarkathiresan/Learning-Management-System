@@ -6,6 +6,13 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@CrossOrigin(
+    origins = {
+        "http://localhost:3000",
+        "https://learning-management-system-cn9j.onrender.com"
+    }
+)
+
 @RequestMapping("/api/assessments/{assessmentId}/discussions")
 public class DiscussionPostController {
 

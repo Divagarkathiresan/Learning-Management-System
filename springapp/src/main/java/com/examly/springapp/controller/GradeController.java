@@ -5,6 +5,12 @@ import com.examly.springapp.service.GradeService;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
+@CrossOrigin(
+    origins = {
+        "http://localhost:3000",
+        "https://learning-management-system-cn9j.onrender.com"
+    }
+)
 @RestController
 @RequestMapping("/api/assessments/{assessmentId}/grades")
 public class GradeController {

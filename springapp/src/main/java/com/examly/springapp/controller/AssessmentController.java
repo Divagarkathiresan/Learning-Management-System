@@ -13,7 +13,12 @@ import org.springframework.http.HttpStatus;
 import java.util.Map;
 import java.util.List;
 
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(
+    origins = {
+        "http://localhost:3000",
+        "https://learning-management-system-cn9j.onrender.com"
+    }
+)
 @RestController
 @RequestMapping("/api/assessments")
 public class AssessmentController {
