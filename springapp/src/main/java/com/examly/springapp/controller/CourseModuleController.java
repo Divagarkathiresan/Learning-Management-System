@@ -30,12 +30,19 @@ public class CourseModuleController {
 
     
     @PostMapping
-    public ResponseEntity<?> addCourse(@RequestBody CourseModule course, @RequestHeader("Authorization") String token) {
+    public ResponseEntity<?> addCourse(@RequestBody CourseModule course,
+                                       @RequestHeader(value = "Authorization", required = false) String token) {
         try {
-            String username = jwtUtil.extractUsername(token.replace("Bearer ", ""));
+            if (token == null || token.isBlank()) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("error", "Missing token"));
+            }
+            String rawToken = token.startsWith("Bearer ") ? token.substring(7) : token;
+            String username = jwtUtil.extractUsername(rawToken);
             User user = userRepo.findByUsername(username);
             
-            if (user == null || !user.getEmail().endsWith("@lms.ac.in")) {
+            String email = user == null ? "" : user.getEmail();
+            if (user == null || (!"ADMIN".equals(user.getRole()) && !email.toLowerCase().endsWith("@lms.ac.in"))) {
                 return ResponseEntity.status(HttpStatus.FORBIDDEN)
                     .body(Map.of("error", "Only admins can add courses"));
             }

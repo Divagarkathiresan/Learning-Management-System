@@ -41,22 +41,7 @@ POST - http://localhost:8080/api/courses/81/quiz?student=Divagar&score=80
 
 Assessment
 POST - http://localhost:8080/api/assessments
-{
-  "title": "Updated Mid Term Exam",
-  "description": "Covers modules 1-4",
-  "grades": [
-    {
-      "studentName": "Divagar",
-      "score": 90
-    }
-  ],
-  "discussions": [
-    {
-      "author": "John Doe",
-      "discussion": "I revised my answer for question 3 after review."
-    }
-  ]
-}
+
 GET - http://localhost:8080/api/assessments
 GET - http://localhost:8080/api/assessments/1
 PUT - http://localhost:8080/api/assessments/1

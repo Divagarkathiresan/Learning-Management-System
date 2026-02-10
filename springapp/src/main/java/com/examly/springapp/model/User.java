@@ -20,4 +20,7 @@ public class User {
     private String username;
 
     private String password; // for now plain text, can use BCrypt later
+    
+    // Simple role flag: "ADMIN" or "USER"
+    private String role;
 }

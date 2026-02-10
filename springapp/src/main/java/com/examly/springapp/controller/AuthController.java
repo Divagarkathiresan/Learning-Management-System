@@ -37,6 +37,13 @@ public class AuthController {
                 return ResponseEntity.badRequest()
                     .body(Map.of("error", "Email is required"));
             }
+            // Set role based on email domain: admins use the institution domain
+            if (user.getEmail().toLowerCase().endsWith("@lms.ac.in")) {
+                user.setRole("ADMIN");
+            } else {
+                user.setRole("USER");
+            }
+
             userRepo.save(user);
             return ResponseEntity.ok(Map.of("message", "Registration successful"));
         } catch (Exception e) {

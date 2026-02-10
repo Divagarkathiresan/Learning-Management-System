@@ -16,7 +16,11 @@ public class SecurityConfig {
             .and()
             .csrf().disable()
             .authorizeRequests()
-                .antMatchers("/api/auth/register", "/api/auth/login","/api/auth/profile" ,"/api/courses/**").permitAll()
+                .antMatchers(
+                    "/api/auth/**",
+                    "/api/courses/**",
+                    "/api/assessments/**"
+                ).permitAll()
                 .anyRequest().authenticated()
             .and()
             .sessionManagement()
