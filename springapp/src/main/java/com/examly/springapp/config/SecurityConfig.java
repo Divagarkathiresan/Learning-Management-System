@@ -14,13 +14,14 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            .cors(cors -> cors.configure(http))
-            .csrf(csrf -> csrf.disable())
+            .cors()   // ✅ THIS enables CORS properly
+            .and()
+            .csrf().disable()
             .authorizeHttpRequests(auth -> auth
                 .antMatchers(
-                    "/api/auth/**",
-                    "/api/courses/**",
-                    "/api/assessments/**"
+                        "/api/auth/**",
+                        "/api/courses/**",
+                        "/api/assessments/**"
                 ).permitAll()
                 .anyRequest().authenticated()
             )
