@@ -1,70 +1,138 @@
 import React, { useState, useEffect } from "react";
-import StudentDashboard from "./StudentDashboard";
-import AdminDashboard from "./AdminDashboard";
-import { API_BASE } from "../../api/config";
+import { fetchCourses } from "../../api";
 import { useNavigate } from "react-router-dom";
 import "./Dashboard.css";
 
-const API_BASE_URL = API_BASE || "http://localhost:8080";
-
-export default function Dashboard() {
-  const [isAdmin, setIsAdmin] = useState(false);
-  const [username, setUsername] = useState("");
+export default function StudentDashboard({ username }) {
+  const [enrolledCourses, setEnrolledCourses] = useState([]);
+  const [stats, setStats] = useState({
+    enrolled: 0,
+    completed: 0,
+    inProgress: 0,
+    quizzesTaken: 0
+  });
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
   const navigate = useNavigate();
 
   useEffect(() => {
-    checkUserRole();
-  }, []);
+    loadStudentData();
+  }, [username]);
 
-  const checkUserRole = async () => {
+  const loadStudentData = async () => {
     try {
-      const token = localStorage.getItem("token");
+      const allCourses = await fetchCourses();
+      const enrolled = allCourses.filter(course =>
+        course.enrolledStudents?.includes(username)
+      );
 
-      // 🔒 No token → redirect
-      if (!token) {
-        navigate("/login");
-        return;
-      }
-
-      const response = await fetch(`${API_BASE_URL}/api/auth/profile`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json"
-        }
+      setEnrolledCourses(enrolled);
+      setStats({
+        enrolled: enrolled.length,
+        completed: enrolled.filter(c => c.progress?.[username] === 100).length,
+        inProgress: enrolled.filter(c => c.progress?.[username] > 0 && c.progress?.[username] < 100).length,
+        quizzesTaken: enrolled.filter(c => c.scores?.[username] !== undefined).length
       });
-
-      // 🔒 Invalid token → force logout
-      if (!response.ok) {
-        localStorage.removeItem("token");
-        navigate("/login");
-        return;
-      }
-
-      const data = await response.json();
-
-      setIsAdmin(data.email?.endsWith("@lms.ac.in") || false);
-      setUsername(data.username || "");
     } catch (err) {
-      console.error("Error checking user role:", err);
-      navigate("/login");
+      console.error("Error loading student dashboard:", err);
+      setError("Failed to load dashboard");
     } finally {
       setLoading(false);
     }
   };
 
   if (loading) {
-    return <div className="dashboard-loading">Loading Dashboard...</div>;
+    return <div className="loading">Loading your dashboard...</div>;
+  }
+
+  if (error) {
+    return <div className="error">{error}</div>;
   }
 
   return (
-    <div className="dashboard">
-      {isAdmin ? (
-        <AdminDashboard />
-      ) : (
-        <StudentDashboard username={username} />
-      )}
+    <div className="student-dashboard">
+      <div className="dashboard-header">
+        <h1>Welcome, {username}!</h1>
+        <p>Track your learning progress</p>
+      </div>
+
+      {/* Stats */}
+      <div className="stats-grid">
+        <StatCard icon="📚" value={stats.enrolled} label="Enrolled Courses" />
+        <StatCard icon="✅" value={stats.completed} label="Completed" />
+        <StatCard icon="📖" value={stats.inProgress} label="In Progress" />
+        <StatCard icon="📝" value={stats.quizzesTaken} label="Quizzes Taken" />
+      </div>
+
+      {/* Enrolled Courses */}
+      <div className="dashboard-sections">
+        <div className="enrolled-courses">
+          <h2>My Courses</h2>
+          {enrolledCourses.length === 0 ? (
+            <div className="empty-state">
+              <p>You haven't enrolled in any courses yet.</p>
+              <button onClick={() => navigate("/courses")} className="action-btn primary">
+                Browse Courses
+              </button>
+            </div>
+          ) : (
+            enrolledCourses.map(course => (
+              <div key={course.id} className="course-card">
+                <div className="course-info">
+                  <h3>{course.title}</h3>
+                  <p>{course.description}</p>
+                  <div className="course-progress">
+                    <span>Progress: {course.progress?.[username] || 0}%</span>
+                    <div className="progress-bar">
+                      <div
+                        className="progress-fill"
+                        style={{ width: `${course.progress?.[username] || 0}%` }}
+                      />
+                    </div>
+                  </div>
+                  {course.scores?.[username] !== undefined && (
+                    <p className="quiz-score">
+                      Quiz Score: {course.scores[username]}/{course.quizQuestions?.length || 0}
+                    </p>
+                  )}
+                </div>
+                <div className="course-actions">
+                  <button onClick={() => navigate(`/content/${course.id}/${course.title}`)}>
+                    View Content
+                  </button>
+                  <button onClick={() => navigate(`/attendQuiz/${course.id}/${course.title}`)}>
+                    Take Quiz
+                  </button>
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+
+        {/* Quick Actions */}
+        <div className="student-actions">
+          <h2>Quick Actions</h2>
+          <button onClick={() => navigate("/courses")} className="action-btn">
+            🔍 Browse Courses
+          </button>
+          <button onClick={() => navigate("/profile")} className="action-btn">
+            👤 View Profile
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function StatCard({ icon, value, label }) {
+  return (
+    <div className="stat-card">
+      <div className="stat-icon">{icon}</div>
+      <div>
+        <h3>{value}</h3>
+        <p>{label}</p>
+      </div>
     </div>
   );
 }

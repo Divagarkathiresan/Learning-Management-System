@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { fetchCourses } from '../../api';
+import { API_BASE } from '../../api/config';
+import { useNavigate } from 'react-router-dom';
 import StudentDashboard from './StudentDashboard';
 import AdminDashboard from './AdminDashboard';
 import './Dashboard.css';
@@ -8,6 +9,7 @@ export default function Dashboard() {
   const [isAdmin, setIsAdmin] = useState(false);
   const [username, setUsername] = useState('');
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     checkUserRole();
@@ -16,19 +18,30 @@ export default function Dashboard() {
   const checkUserRole = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:8080/api/auth/profile', {
+      if (!token) {
+        navigate('/login');
+        return;
+      }
+
+      const response = await fetch(`${API_BASE}/api/auth/profile`, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
         }
       });
-      if (response.ok) {
-        const data = await response.json();
-        setIsAdmin(data.email?.endsWith('@lms.ac.in') || false);
-        setUsername(data.username || '');
+
+      if (!response.ok) {
+        localStorage.removeItem('token');
+        navigate('/login');
+        return;
       }
+
+      const data = await response.json();
+      setIsAdmin(data.email?.endsWith('@lms.ac.in') || false);
+      setUsername(data.username || '');
     } catch (err) {
       console.error('Error checking user role:', err);
+      navigate('/login');
     } finally {
       setLoading(false);
     }
@@ -41,7 +54,7 @@ export default function Dashboard() {
   return (
     <div className="dashboard">
       {isAdmin ? (
-        <AdminDashboard username={username} />
+        <AdminDashboard />
       ) : (
         <StudentDashboard username={username} />
       )}
