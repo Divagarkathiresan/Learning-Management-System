@@ -4,11 +4,13 @@ import javax.persistence.*;
 import lombok.*;
 
 @Entity
+@Table(name = "users")   // 🔥 IMPORTANT FIX
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class User {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -19,8 +21,7 @@ public class User {
     @Column(unique = true)
     private String username;
 
-    private String password; // for now plain text, can use BCrypt later
-    
-    // Simple role flag: "ADMIN" or "USER"
+    private String password;
+
     private String role;
 }
